@@ -11,15 +11,14 @@
 </head>
 </head>
 
-<body>
+<body id="posts-list">
     <div class="container p-2">
         <h1 class="text-center text-primary">Fala, Estagiário!</h1>
     </div>
-    <p id="message"></p>
 
     <div class="container d-flex justify-content-center">
         <div class="row">
-            <form method="POST" action="postar">
+            <form method="POST" id="form-post">
                 {% csrf_token %}
                 <div class="mb-3">
                     <label for="autor" class="form-label">Nome</label>
@@ -27,11 +26,11 @@
                 </div>
                 <div class="mb-3">
                     <label for="mensagem" class="form-label">Mensagem</label>
-                    <textarea class="form-control" id="mensagem" name="mensagem" id="validationDefault02"
-                        placeholder="Conte sobre seu dia..." rows="3"></textarea>
+                    <textarea class="form-control" id="mensagem" name="mensagem" placeholder="Conte sobre seu dia..."
+                        rows="3"></textarea>
                 </div>
-                <button class="btn btn-primary mt-2" type="submit" class="botao_postar"
-                    id="botao_postar">Postar</button>
+                <button class="btn btn-primary mt-2" type="submit" class="botao_postar" id="botao_postar"
+                    onclick="newPost()">Postar</button>
             </form>
         </div>
     </div>
@@ -49,8 +48,8 @@
                         <p class="badge bg-info pr-4">{{post.qtd_curtidas}} curtidas</p>
                         <p class="card-text">{{post.mensagem}}</p>
 
-                        <a class="botao_curtir" id="post_id" value="{{post.id}}" href="#" data-catid="{{post.id}}">
-                            <button type="button" class="btn btn-outline-primary">
+                        <a class="botao-curtir" id="post_id" value="{{post.id}}" href="{% url 'curtir' post_id">
+                            <button type="submit" class="btn btn-outline-primary" onclick="likePost('{{post.id}}')">
                                 <svg style="width:24px;height:24px" viewBox="0 0 24 24">
                                     <path fill="currentColor"
                                         d="M5,9V21H1V9H5M9,21A2,2 0 0,1 7,19V9C7,8.45 7.22,7.95 7.59,7.59L14.17,1L15.23,2.06C15.5,2.33 15.67,2.7 15.67,3.11L15.64,3.43L14.69,8H21C22.11,8 23,8.9 23,10V12C23,12.26 22.95,12.5 22.86,12.73L19.84,19.78C19.54,20.5 18.83,21 18,21H9M9,19H18.03L21,12V10H12.21L13.34,4.68L9,9.03V19Z" />
@@ -65,24 +64,48 @@
         </div>
     </div>
 
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
     <script type="text/javascript">
-        $('.botao_curtir').click(function () {
-            var id;
-            id = $(this).attr("data-catid");
-            $.ajax(
-                {
-                    type: "GET",
-                    url: "curtir",
-                    data: {
-                        id: id
-                    },
-                    success: function (data) {
-                        $(catid).remove();
-                        $('#message').text(data);
+        xhr = new XMLHttpRequest();
+        xhr.open('GET', 'posts', true);
+        xhr.send(null);
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState === 4 && xhr.status === 200) {
+                document.getElementById('posts-list').innerHTML = xhr.response;
+            }
+        };
+
+        function newPost() {
+            xhr = new XMLHttpRequest();
+            xhr.open('POST', 'postar', true);
+            formulario = document.getElementById("form-post");
+            formData = new FormData(formulario);
+            xhr.send(formData);
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === 4 && xhr.status === 200) {
+                    document.getElementById('posts-list').innerHTML = xhr.response;
+                }
+            };
+
+            return false;
+        }
+
+        function likePost(id) {
+            xhr = new XMLHttpRequest();
+            httpRequest.open('POST', "{% url 'curtir' id='REPLACE_ID'%}".replace("REPLACE_ID", id));
+            httpRequest.setRequestHeader("NAME", "CSRF");
+            xhr.onreadystatechange = function () {
+                if (httpRequest.readyState === XMLHttpRequest.DONE) {
+                    if (httpRequest.status === 200) {
+                        console.log(httpRequest.response);
+                    } else {
+                        alert(`Deu ruim! Status ${httpRequest.status}`);
                     }
-                })
-        });
+                }
+            };
+            xhr.send();
+            document.getElementById('botao-curtir').addEventListener('click', likePost, true);
+        }
+
     </script>
 
 

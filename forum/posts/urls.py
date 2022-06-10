@@ -3,6 +3,7 @@ from . import views
 
 urlpatterns = [
     path('', views.index , name='index'),
+    path('posts', views.listar_posts , name='posts'),
     path('postar', views.postar, name='postar'),
-    path(r'^curtir/$', views.curtir, name='curtir')
+    path('curtir/<id>', views.curtir, name='curtir')
 ]
