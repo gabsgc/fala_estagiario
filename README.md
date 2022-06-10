@@ -15,8 +15,8 @@ andamento dos estagiários.
 - [x] Timeline 
 - [x] Ordernar por data de postagem
 - [X] Postar
-- [ ] Timeline com AJAX
-- [ ] Postar usando AJAX
+- [X] Timeline com AJAX
+- [X] Postar usando AJAX
 - [ ] Curtida
 
 ## :computer: Tecnologias
@@ -26,7 +26,7 @@ Esse projeto foi desenvolvido utilizando as seguintes tecnologias:
 - HTML
 - Bootstrap
 - Postgres
-- AJAX*
+- AJAX
 
 ## ⛏ Dependências
 [Visualizar dependências](https://github.com/gabsgc/fala_estagiario/blob/master/requirements.txt)
