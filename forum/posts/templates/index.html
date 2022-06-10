@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fala Estagiário!</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
+</head>
+</head>
+
+<body>
+    <div class="container p-2">
+        <h1 class="text-center text-primary">Fala, Estagiário!</h1>
+    </div>
+    <p id="message"></p>
+
+    <div class="container d-flex justify-content-center">
+        <div class="row">
+            <form method="POST" action="postar">
+                {% csrf_token %}
+                <div class="mb-3">
+                    <label for="autor" class="form-label">Nome</label>
+                    <input type="text" class="form-control" id="autor" name="autor">
+                </div>
+                <div class="mb-3">
+                    <label for="mensagem" class="form-label">Mensagem</label>
+                    <textarea class="form-control" id="mensagem" name="mensagem" id="validationDefault02"
+                        placeholder="Conte sobre seu dia..." rows="3"></textarea>
+                </div>
+                <button class="btn btn-primary mt-2" type="submit" class="botao_postar"
+                    id="botao_postar">Postar</button>
+            </form>
+        </div>
+    </div>
+
+    <h3 class="text-center text-primary pt-5">Últimas postagens</h3>
+    <div class="container p-2 d-flex justify-content-center">
+
+        <div class="row">
+            {% for post in posts %}
+            <div class="col" id="posts">
+                <div class="card p-2 m-3" style="width: 18rem;">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ post.autor }}</h5>
+                        <h6 class="card-subtitle mb-2 text-muted">{{post.data_postagem}}</h6>
+                        <p class="badge bg-info pr-4">{{post.qtd_curtidas}} curtidas</p>
+                        <p class="card-text">{{post.mensagem}}</p>
+
+                        <a class="botao_curtir" id="post_id" value="{{post.id}}" href="#" data-catid="{{post.id}}">
+                            <button type="button" class="btn btn-outline-primary">
+                                <svg style="width:24px;height:24px" viewBox="0 0 24 24">
+                                    <path fill="currentColor"
+                                        d="M5,9V21H1V9H5M9,21A2,2 0 0,1 7,19V9C7,8.45 7.22,7.95 7.59,7.59L14.17,1L15.23,2.06C15.5,2.33 15.67,2.7 15.67,3.11L15.64,3.43L14.69,8H21C22.11,8 23,8.9 23,10V12C23,12.26 22.95,12.5 22.86,12.73L19.84,19.78C19.54,20.5 18.83,21 18,21H9M9,19H18.03L21,12V10H12.21L13.34,4.68L9,9.03V19Z" />
+                                </svg>
+                                Curtir
+                            </button>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+    <script type="text/javascript">
+        $('.botao_curtir').click(function () {
+            var id;
+            id = $(this).attr("data-catid");
+            $.ajax(
+                {
+                    type: "GET",
+                    url: "curtir",
+                    data: {
+                        id: id
+                    },
+                    success: function (data) {
+                        $(catid).remove();
+                        $('#message').text(data);
+                    }
+                })
+        });
+    </script>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.5/dist/umd/popper.min.js"
+        integrity="sha384-Xe+8cL9oJa6tN/veChSP7q+mnSPaj5Bcu9mPX5F5xIGE0DVittaqT5lorf0EI7Vk"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.min.js"
+        integrity="sha384-kjU+l4N0Yf4ZOJErLsIcvOU2qSb74wXpOhqTvwVx3OElZRweTnQ6d31fXEoRD1Jy"
+        crossorigin="anonymous"></script>
+</body>
+
+</html>
